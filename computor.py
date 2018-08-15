@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 import sys
-import re
+from collections import Counter
+from parser import trim_string, trim_array, generate_left_right_part, parse_equation_part_into_tokens, create_tokens, sort_dict_by_keys
 
 # several examples to try
 
@@ -9,53 +10,33 @@ import re
 # "5 * X^0 + 4 * X^1 = 4 * X^0"
 # "5 * X^0 + 4 * X^1 - 9.3 * X^2 = 1 * X^0"
 
-# function that trims a string
-def trim_string(string):
-	return ' '.join(string.split())
 
+# function that will create reduced form and prints it
+def create_reduced_form(left_part, right_part):
+	
+	reduced_form = {}
+	for key_l, value_l in left_part.items():
+		if key_l in right_part.keys():
+			reduced_form[key_l] = left_part[key_l] + (-1.0 * right_part[key_l])
+		else:
+			reduced_form[key_l] = left_part[key_l]
+	return (reduced_form)
 
-#trim all strings in the array of them
-def trim_array(arr):
-	result = []
-	for elem in arr:
-		result.append(trim_string(elem))
-	return (result)
-
-# function that returns left and right part of the equation
-# performs a split by '='
-# return type is 'tuple'
-def generate_left_right_part(equation):
-	left_part, right_part = equation.split('=') 
-	left_part = trim_string(left_part)
-	right_part = trim_string(right_part)
-	return left_part, right_part
-
-# function that will split the equation part
-# and returns tj list of elements that represent { sign, number, and X^n}
-def parse_equation_part(part):
-	# resulting list of the parts of equation
-	result = []
-	# split left part of equation by '+'
-	part = trim_array(part.split('+'))
-	# loop through all the parts of the split by '+' equitaion string
-	for elem in part:
-		# split the string by '-'
-		part_split_by_minus = trim_array(elem.split('-'))
-		# loop through the parts of split by '-' equation string
-		for split_elem in part_split_by_minus:
-			# if the element was not already present in the part list
-			# it means that it is a new created token
-			# it had a '-' sign in it, we append it and push to array
-			if split_elem != "" and split_elem not in part:
-				result.append('-' + split_elem)
-			# just add this element to array, without chages
-			else:
-				result.append(split_elem)
-	# remove empty string in the array
-	result = list(filter(None, result))
-	print(result)
-	# return the result
-	return (result)
+# function to print a reduced form
+def print_reduced_form(reduced_form):
+	reduced_string = "Reduced form: "
+	i = 0
+	for key, val in reduced_form.items():
+		reduced_string += str(str(val) + " * X^" + str(key))
+		if (val < 0.0):
+			reduced_string += str(" - " + str(val * -1.0))
+		if (val >= 0.0):
+			if i != 0:
+				reduced_string += " + "
+			reduced_string +=  str(val)
+		reduced_string += (" * X^" + str(key) + " ")
+		i += 1
+	print(reduced_string)
 
 
 # main function that start the whole process
@@ -75,19 +56,32 @@ def main(argv):
 	# and trim its parts and print after all
 	# if a '=' is missing, an exception is thrown
 	try:
+		# create left and right parts of equation
 		left_part, right_part = generate_left_right_part(equation)
 	except:
-		print(r"Ivalid equation: '=' is missing")
-		return
-	# parse left part of equation
-	parse_equation_part(left_part)
-	# parse right part of equation
-	parse_equation_part(right_part)
-
-	return
+		raise BaseException("Ivalid equation: '=' is missing.")
+	# parse left and right part of equation
+	# first argument is part of equation, second is change argument or not
+	left_part = parse_equation_part_into_tokens(left_part)
+	right_part = parse_equation_part_into_tokens(right_part)
+	print(left_part)
+	# create tokens from both parts
+	left_part = create_tokens(left_part)
+	right_part = create_tokens(right_part)
+	print(left_part)
+	print(right_part)
+	# creating of a reduced form
+	reduced_form = create_reduced_form(left_part, right_part)
+	print(reduced_form)
+	# print reduced form
+	print_reduced_form(reduced_form)
 
 
 # start a main function
 if __name__ == "__main__":
-	main(sys.argv)
+	try:
+		main(sys.argv)
+	except BaseException as e:
+		print(str(e))
+
 
