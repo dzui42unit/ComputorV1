@@ -36,18 +36,18 @@ def parse_equation_part_into_tokens(part):
 	result = []
 	# split left part of equation by '+'
 	part = trim_array(part.split('+'))
-
 	i = 0
+	# print(part)
 	while i < len(part):
-		part[i] = '+'+ part[i]
+		if part[i][0] != '-':
+			part[i] = '+'+ part[i]
 		i += 1
-	print(part)
 	# loop through all the parts of the split by '+' equitaion string
 	for elem in part:
 		# split the string by '-'
 		part_split_by_minus = trim_array(elem.split('-'))
+		part_split_by_minus = list(filter(None, part_split_by_minus))
 		# loop through the parts of split by '-' equation string
-		print(part_split_by_minus)
 		for split_elem in part_split_by_minus:
 			# if the element was not already present in the part list
 			# it means that it is a new created token
