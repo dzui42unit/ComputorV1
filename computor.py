@@ -13,6 +13,8 @@ from parser import trim_string, trim_array, generate_left_right_part, parse_equa
 # "3 * X^2 - 5 * X^1 = 0 * X^0"
 # "-7 * X^0 + 1 * X^2 = 0 * X^0"
 
+#
+
 # http://nenuda.ru/%D1%80%D0%B5%D1%88%D0%B5%D0%BD%D0%B8%D0%B5-%D0%BA%D0%B2%D0%B0%D0%B4%D1%80%D0%B0%D1%82%D0%BD%D1%8B%D1%85-%D1%83%D1%80%D0%B0%D0%B2%D0%BD%D0%B5%D0%BD%D0%B8%D0%B9-%D1%81-%D0%BE%D1%82%D1%80%D0%B8%D1%86%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%BC-%D0%B4%D0%B8%D1%81%D0%BA%D1%80%D0%B8%D0%BC%D0%B8%D0%BD%D0%B0%D0%BD%D1%82%D0%BE.html
 # http://mathprofi.ru/kompleksnye_chisla_dlya_chainikov.html
 
@@ -59,6 +61,8 @@ def check_key(reduced_form, key):
 # (6 + 10i) * (6 - 10i) / 2 (6 - 10i)
 # 36 + 100 / 12 - 20i 
 
+# 5x2 – 8x + 5 = 0
+
 # function that performs computing
 
 def compute(reduced_form):
@@ -90,6 +94,12 @@ def compute(reduced_form):
 		if d < 0.0:
 			print("Discriminant is strictly negative, the two solutions are:")
 			print(d)
+			d = d * -1.0;
+			x1 = (-1.0 * b - sqrt(d)) / (2 * a)
+			x2 = (-1.0 * b + sqrt(d)) / (2 * a)
+			print("{0:0.6f} + {1:0.6f} * i".format(x1, x2))
+			print("{0:0.6f} - {1:0.6f} * i".format(x1, x2))
+
 			pass
 	if polynom_degree == 1:
 		b = check_key(reduced_form, 1)
@@ -130,6 +140,9 @@ def main(argv):
 	# creating of a reduced form
 	reduced_form = create_reduced_form(left_part, right_part)
 	# print reduced form
+	if len(reduced_form.keys()) == 0:
+		print('All the real numbers are solution')
+		return 
 	print_reduced_form(reduced_form)
 	# compute the equation
 	compute(reduced_form)
