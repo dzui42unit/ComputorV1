@@ -5,19 +5,6 @@ from math import sqrt
 from collections import Counter
 from parser import trim_string, trim_array, generate_left_right_part, parse_equation_part_into_tokens, create_tokens, sort_dict_by_keys
 
-# several examples to try
-
-# "8 * X^0 - 6 * X^1 + 0 * X^2 - 5.6 * X^3 = 3 * X^0"
-# "5 * X^0 + 4 * X^1 = 4 * X^0"
-# "5 * X^0 + 4 * X^1 - 9.3 * X^2 = 1 * X^0"
-# "3 * X^2 - 5 * X^1 = 0 * X^0"
-# "-7 * X^0 + 1 * X^2 = 0 * X^0"
-
-#
-
-# http://nenuda.ru/%D1%80%D0%B5%D1%88%D0%B5%D0%BD%D0%B8%D0%B5-%D0%BA%D0%B2%D0%B0%D0%B4%D1%80%D0%B0%D1%82%D0%BD%D1%8B%D1%85-%D1%83%D1%80%D0%B0%D0%B2%D0%BD%D0%B5%D0%BD%D0%B8%D0%B9-%D1%81-%D0%BE%D1%82%D1%80%D0%B8%D1%86%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%BC-%D0%B4%D0%B8%D1%81%D0%BA%D1%80%D0%B8%D0%BC%D0%B8%D0%BD%D0%B0%D0%BD%D1%82%D0%BE.html
-# http://mathprofi.ru/kompleksnye_chisla_dlya_chainikov.html
-
 # function that will create reduced form and prints it
 def create_reduced_form(left_part, right_part):
 	
@@ -56,15 +43,7 @@ def check_key(reduced_form, key):
 		return (0.0)
 	return reduced_form[key]
 
-
-# 6 + 10i / 2 = (6 + 10i) * (6 - 10i) / 2 (6 - 10i)
-# (6 + 10i) * (6 - 10i) / 2 (6 - 10i)
-# 36 + 100 / 12 - 20i 
-
-# 5x2 – 8x + 5 = 0
-
 # function that performs computing
-
 def compute(reduced_form):
 	# find the degree of polynom and print it
 	polynom_degree =max(reduced_form.keys())
@@ -82,7 +61,6 @@ def compute(reduced_form):
 		# if it is positive -> find solutions
 		if d > 0.0:
 			print("Discriminant is strictly positive, the two solutions are:")
-			print(d)
 			x1 = (-1.0 * b - sqrt(d)) / (2 * a)
 			x2 = (-1.0 * b + sqrt(d)) / (2 * a)
 			print("%.6f" % x1)
@@ -93,13 +71,11 @@ def compute(reduced_form):
 			print(x)
 		if d < 0.0:
 			print("Discriminant is strictly negative, the two solutions are:")
-			print(d)
 			d = d * -1.0;
 			x1 = (-1.0 * b - sqrt(d)) / (2 * a)
 			x2 = (-1.0 * b + sqrt(d)) / (2 * a)
 			print("{0:0.6f} + {1:0.6f} * i".format(x1, x2))
 			print("{0:0.6f} - {1:0.6f} * i".format(x1, x2))
-
 			pass
 	if polynom_degree == 1:
 		b = check_key(reduced_form, 1)
